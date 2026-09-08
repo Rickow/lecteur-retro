@@ -1,5 +1,20 @@
 # Changelog
 
+## v2.1.0
+
+Arcade complet + **Neo Geo**.
+
+### ✨ Nouveautés
+- Le core arcade passe de CPS-2 seul au **FB Alpha 2012 complet** : **CPS-1, CPS-2 et Neo Geo**
+  (AES/MVS), tous en `.zip` auto-détectés par un seul core.
+- **BIOS Neo Geo** géré de deux façons : bouton **« Charger le BIOS Neo Geo »** (stocké en IndexedDB,
+  jamais dans le fichier publié), ou inliné dans une build perso via `build.py --bios neogeo.zip`.
+
+### ⚠️ Notes
+- Neo Geo **exige** son BIOS (`neogeo.zip`, set FB Alpha 2012). Non fourni.
+- Le core FBA2012 complet est plus lourd → fichier ~15,8 Mo (dépôt) / ~16,4 Mo (perso avec BIOS).
+- Façade arcade partagée (6 boutons) : Neo Geo utilise A/B/C/D parmi ces boutons.
+
 ## v2.0.0
 
 De 3 à **12 systèmes**, de vraies façades de contrôle, et un fichier **plus léger** qu'avant.

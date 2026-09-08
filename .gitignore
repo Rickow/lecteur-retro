@@ -4,3 +4,7 @@ cores/
 # artefacts locaux
 *.tmp
 .DS_Store
+
+# version perso avec BIOS Neo Geo inliné (copyright — ne pas publier)
+lecteur-retro-neogeo.html
+bios/

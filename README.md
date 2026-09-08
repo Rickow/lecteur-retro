@@ -28,7 +28,7 @@ Nothing is uploaded anywhere: **your ROMs stay on your device.**
 | Game Boy / Color | `.gb` `.gbc` | PC Engine / TG-16 | `.pce` |
 | Game Boy Advance | `.gba` | Atari Lynx | `.lnx` |
 | Sega Mega Drive / Genesis | `.md` `.gen` `.smd` | Neo Geo Pocket / Color | `.ngp` `.ngc` |
-| Arcade CPS-2 | `.zip` | WonderSwan / Color | `.ws` `.wsc` |
+| Arcade CPS-1 / CPS-2 / **Neo Geo** | `.zip` | WonderSwan / Color | `.ws` `.wsc` |
 
 The system is **auto-detected** from the file extension (with a magic-byte fallback for Mega
 Drive and Lynx).
@@ -54,14 +54,16 @@ Drive and Lynx).
 2. **Load a ROM** → pick a file.
 3. Tap **Play** (required on iOS to unlock audio).
 
-### Special case: CPS-2 arcade
+### Special case: arcade (CPS-1 / CPS-2 / Neo Geo)
 
 Arcade is stricter than consoles:
 
 - The **`.zip` must be named exactly as its romset**: `sfa3.zip`, `ssf2.zip`, `mvsc.zip`,
-  `vsav.zip`, `dstlk.zip`… (the core identifies the game by the filename).
-- The romset must match the **FB Alpha 2012 set** (a recent MAME/FBNeo set will have mismatched
-  CRCs). No separate BIOS is needed for CPS-2.
+  `mslug.zip`, `kof98.zip`… (the core identifies the game by the filename).
+- The romset must match the **FB Alpha 2012 set** (a recent MAME/FBNeo set will have mismatched CRCs).
+- **Neo Geo** also needs the **`neogeo.zip` BIOS**. Load it once via the **"Charger le BIOS Neo Geo"**
+  button on the home screen — it's kept in the browser (IndexedDB) and reused. It is **not** bundled
+  in the file (copyright). CPS-1/CPS-2 need no BIOS.
 - If it fails, open the **log**: the core lists the missing/incorrect files.
 
 ## Constraints & limits

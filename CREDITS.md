@@ -20,7 +20,7 @@ d'origine** (voir la colonne Licence).
 | Super Nintendo | **Snes9x** | https://github.com/libretro/snes9x | Snes9x (non-commercial) |
 | Game Boy / Color / Advance | **mGBA** | https://github.com/libretro/mgba | MPL-2.0 |
 | Sega Mega Drive / Master System / Game Gear | **Genesis Plus GX** | https://github.com/libretro/Genesis-Plus-GX | Genesis Plus GX (non-commercial) |
-| Arcade CPS-2 | **FB Alpha 2012** | https://github.com/libretro/fbalpha2012 | FB Alpha (non-commercial) |
+| Arcade CPS-1 / CPS-2 / Neo Geo | **FB Alpha 2012** | https://github.com/libretro/fbalpha2012 | FB Alpha (non-commercial) |
 | PC Engine / TurboGrafx-16 | **Beetle PCE FAST** (mednafen_pce_fast) | https://github.com/libretro/beetle-pce-fast-libretro | GPL-2.0 |
 | Atari Lynx | **Handy** | https://github.com/libretro/libretro-handy | zlib |
 | Neo Geo Pocket / Color | **Beetle NeoPop** (mednafen_ngp) | https://github.com/libretro/beetle-ngp-libretro | GPL-2.0 |
@@ -35,4 +35,6 @@ sauvegardes) est fourni sous licence MIT (voir [`LICENSE`](LICENSE)), mais cela 
 restrictions des cores embarqués.
 
 Aucune ROM, BIOS ou jeu n'est distribué avec ce projet. Vous devez fournir vos propres fichiers,
-dont vous possédez les droits.
+dont vous possédez les droits. En particulier, la **Neo Geo nécessite son BIOS** (`neogeo.zip`) :
+il n'est pas fourni ; chargez-le depuis l'appareil via le bouton « Charger le BIOS Neo Geo »
+(il est conservé en local dans le navigateur, jamais dans le fichier publié).
