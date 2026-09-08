@@ -122,9 +122,11 @@ def main():
 
     # F) ngCore + arcade keepName (nom du romset) + bios dans les options de lancement
     h = rep(h, "core:curCore,", "core:(CORES[curCore].ngCore||curCore),", "core:curCore", n=2)
+    # BIOS arcade = écrit À CÔTÉ du jeu (2e fichier rom -> contentDirectory), car FBA le cherche là.
+    # RetroArch charge rom[0] (le jeu) ; rom[1] (neogeo.zip) est juste posé dans le même dossier.
     h = rep(h, "rom:{ fileName:'game.'+det.ext, fileContent:romBlob },",
-            "rom:{ fileName:(CORES[curCore].keepName?curName+'.'+curExt:'game.'+det.ext), fileContent:romBlob },\n"
-            "          bios:(_bios?[new File([_bios],'neogeo.zip')]:undefined),", "fileName+bios launchRom")
+            "rom:(_bios?[{fileName:(CORES[curCore].keepName?curName+'.'+curExt:'game.'+det.ext),fileContent:romBlob},{fileName:'neogeo.zip',fileContent:new Blob([_bios])}]"
+            ":{fileName:(CORES[curCore].keepName?curName+'.'+curExt:'game.'+det.ext),fileContent:romBlob}),", "rom(+bios) launchRom")
     h = rep(h, "rom:{fileName:'game.'+curExt,fileContent:new Blob([curBytes])}, sram:sram,",
             "rom:{fileName:(CORES[curCore].keepName?curName+'.'+curExt:'game.'+curExt),fileContent:new Blob([curBytes])}, sram:sram,", "fileName SRAM")
 
@@ -162,6 +164,19 @@ def main():
             "    document.getElementById('file-bios').addEventListener('change',async function(e){ var f=e.target.files[0]; e.target.value=''; if(!f) return;\n"
             "      try{ var u8=new Uint8Array(await f.arrayBuffer()); await idbSet('bios:neogeo',{buf:u8.buffer}); log('BIOS Neo Geo enregistré ('+f.name+', '+((u8.length/1024)|0)+' Ko).','ok'); }catch(err){ showLog(); log('BIOS : '+(err&&(err.message||err)),'err'); } });\n"
             "    (async function init(){", "handlers bios")
+
+    # L) diagnostic : log détaillé RetroArch + capture console -> journal de la page
+    h = rep(h, "Object.assign({video_smooth:false},BINDS)",
+            "Object.assign({video_smooth:false,log_verbosity:true,frontend_log_level:0},BINDS)",
+            "log_verbosity", n=2)
+    h = rep(h, "    window.addEventListener('error', function(e){ showLog(); log('Erreur : '+(e.message||e),'err'); });",
+            "    (function(){ var _l=console.log.bind(console),_w=console.warn.bind(console),_e=console.error.bind(console);\n"
+            "      function s(a){ try{ return Array.prototype.map.call(a,function(x){return (x&&typeof x==='object')?JSON.stringify(x):String(x);}).join(' ').slice(0,300); }catch(e){ return ''; } }\n"
+            "      console.log=function(){ _l.apply(null,arguments); try{ log(s(arguments),'muted'); }catch(e){} };\n"
+            "      console.warn=function(){ _w.apply(null,arguments); try{ log('\\u26a0 '+s(arguments),'muted'); }catch(e){} };\n"
+            "      console.error=function(){ _e.apply(null,arguments); try{ showLog(); log('\\u2716 '+s(arguments),'err'); }catch(e){} }; })();\n"
+            "    window.addEventListener('error', function(e){ showLog(); log('Erreur : '+(e.message||e),'err'); });",
+            "capture console")
 
     # K) accept + titre + crest
     h = rep(h, 'accept=".nes,.sfc,.smc,.gba,application/octet-stream"',

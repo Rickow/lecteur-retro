@@ -1,5 +1,16 @@
 # Changelog
 
+## v2.1.1
+
+Correctif Neo Geo (chargement).
+
+- **Emplacement du BIOS** : `neogeo.zip` est maintenant écrit **dans le dossier du jeu**
+  (via un 2e fichier `rom`) au lieu du dossier `system/` — FBA cherche le BIOS à côté du
+  contenu. Corrige « Failed to find archive …/content/neogeo » / « NeoGeo BIOS missing ».
+- **CRC modernes** : le BIOS assemblé utilise le `sfix.sfix` moderne (`c2ea0cfd`) attendu
+  par ce build FBA (et `asia-s3.rom` `91b64be3`, requis).
+- **Diagnostic** : log détaillé RetroArch capturé dans le journal de la page (lisible sur iPhone).
+
 ## v2.1.0
 
 Arcade complet + **Neo Geo**.

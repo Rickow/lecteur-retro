@@ -3482,6 +3482,11 @@ try {
 
     function log(m,c){ var d=document.createElement('div'); if(c)d.className=c; d.textContent=m; logEl.appendChild(d); logEl.scrollTop=logEl.scrollHeight; while(logEl.children.length>80) logEl.removeChild(logEl.firstChild); }
     function showLog(){ logEl.classList.add('show'); }
+    (function(){ var _l=console.log.bind(console),_w=console.warn.bind(console),_e=console.error.bind(console);
+      function s(a){ try{ return Array.prototype.map.call(a,function(x){return (x&&typeof x==='object')?JSON.stringify(x):String(x);}).join(' ').slice(0,300); }catch(e){ return ''; } }
+      console.log=function(){ _l.apply(null,arguments); try{ log(s(arguments),'muted'); }catch(e){} };
+      console.warn=function(){ _w.apply(null,arguments); try{ log('\u26a0 '+s(arguments),'muted'); }catch(e){} };
+      console.error=function(){ _e.apply(null,arguments); try{ showLog(); log('\u2716 '+s(arguments),'err'); }catch(e){} }; })();
     window.addEventListener('error', function(e){ showLog(); log('Erreur : '+(e.message||e),'err'); });
     window.addEventListener('unhandledrejection', function(e){ var s=String(e.reason&&(e.reason.message||e.reason)||e);
       if(/wake.?lock|Feature-Policy|permissions policy/i.test(s)){ log('(info) '+s,'muted'); return; } showLog(); log('Rejet : '+s,'err'); });
@@ -3590,9 +3595,8 @@ try {
         log('Chargement '+name+' — '+CORES[curCore].label+'…');
         ng=await Nostalgist.launch({ element:canvas, core:(CORES[curCore].ngCore||curCore),
           resolveCoreJs:async function(){return blobs.js;}, resolveCoreWasm:async function(){return blobs.wasm;},
-          rom:{ fileName:(CORES[curCore].keepName?curName+'.'+curExt:'game.'+det.ext), fileContent:romBlob },
-          bios:(_bios?[new File([_bios],'neogeo.zip')]:undefined),
-          retroarchConfig:Object.assign({video_smooth:false},BINDS) });
+          rom:(_bios?[{fileName:(CORES[curCore].keepName?curName+'.'+curExt:'game.'+det.ext),fileContent:romBlob},{fileName:'neogeo.zip',fileContent:new Blob([_bios])}]:{fileName:(CORES[curCore].keepName?curName+'.'+curExt:'game.'+det.ext),fileContent:romBlob}),
+          retroarchConfig:Object.assign({video_smooth:false,log_verbosity:true,frontend_log_level:0},BINDS) });
         loader.classList.add('hidden'); document.body.classList.add('running');
         document.getElementById('loader-close').style.display='';
         try{ canvas.focus(); }catch(_){ }
@@ -3654,7 +3658,7 @@ try {
       try{ if(ng&&ng.exit) await ng.exit(); }catch(_){ }
       try{ var sram=new Uint8Array(await f.arrayBuffer()); freshCanvas(); var blobs=await coreBlobs(curCore);
         ng=await Nostalgist.launch({ element:canvas, core:(CORES[curCore].ngCore||curCore), resolveCoreJs:async function(){return blobs.js;}, resolveCoreWasm:async function(){return blobs.wasm;},
-          rom:{fileName:(CORES[curCore].keepName?curName+'.'+curExt:'game.'+curExt),fileContent:new Blob([curBytes])}, sram:sram, retroarchConfig:Object.assign({video_smooth:false},BINDS) });
+          rom:{fileName:(CORES[curCore].keepName?curName+'.'+curExt:'game.'+curExt),fileContent:new Blob([curBytes])}, sram:sram, retroarchConfig:Object.assign({video_smooth:false,log_verbosity:true,frontend_log_level:0},BINDS) });
         fit(); log('SRAM importée et jeu relancé.','ok'); }catch(err){ showLog(); log('Import SRAM : '+(err&&(err.message||err)),'err'); } });
 
     document.getElementById('load-bios').addEventListener('click',function(){document.getElementById('file-bios').click();});
