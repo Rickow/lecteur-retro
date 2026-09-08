@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.1.5
+
+- Neo Geo : les 4 boutons passent en **2×2 (A B / C D)** au lieu d'une ligne — plus compact
+  sur téléphone, laisse plus de place au D-pad.
+
 ## v2.1.4
 
 - **Neo Geo : façade 4 boutons (A/B/C/D)** au lieu de 6. Détection auto en lisant les noms

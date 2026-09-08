@@ -161,8 +161,8 @@ def main():
       "  #pad .face.duo button{width:var(--k);height:var(--k)} #pad .face.duo .a{margin-bottom:1.4rem}\n"
       "  #pad .face.six{display:grid;grid-template-columns:repeat(3,var(--k));grid-template-rows:repeat(2,var(--k));gap:3px}\n"
       "  #pad .face.six button{border-radius:50%;font-size:.6rem;font-weight:700}\n"
-      "  #pad .face.neo{display:flex;gap:.4rem;align-items:center}\n"
-      "  #pad .face.neo button{width:var(--k);height:var(--k);border-radius:50%;font-size:.75rem;font-weight:700}",
+      "  #pad .face.neo{display:grid;grid-template-columns:repeat(2,var(--k));grid-template-rows:repeat(2,var(--k));gap:4px}\n"
+      "  #pad .face.neo button{border-radius:50%;font-size:.75rem;font-weight:700}",
       "CSS faces")
 
     # I2) buildPad accepte une façade ; launchRom choisit 4 boutons pour la Neo Geo
