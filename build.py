@@ -91,7 +91,8 @@ def main():
     # câblage BIOS dans launchRom : résoudre + passer à Nostalgist
     h = rep(h, "        var blobs=await coreBlobs(curCore), romBlob=new Blob([u8],{type:'application/octet-stream'});",
             "        var blobs=await coreBlobs(curCore), romBlob=new Blob([u8],{type:'application/octet-stream'});\n"
-            "        var _bios=CORES[curCore].neobios?await resolveNeoBios():null;", "resolve bios launchRom")
+            "        var _bios=CORES[curCore].neobios?await resolveNeoBios():null;\n"
+            "        if(CORES[curCore].neobios) log(_bios?('\\u2713 BIOS Neo Geo joint au jeu ('+((_bios.length/1024)|0)+' Ko)'):'\\u2717 BIOS Neo Geo absent \\u2014 charge un neogeo.zip','ok');", "resolve bios launchRom")
 
     # D) façades boutons
     face_anchor = "var FACE_DUO='<div class=\"face duo\"><button class=\"b\" data-btn=\"b\">B</button><button class=\"a\" data-btn=\"a\">A</button></div>';"
@@ -165,16 +166,15 @@ def main():
             "      try{ var u8=new Uint8Array(await f.arrayBuffer()); await idbSet('bios:neogeo',{buf:u8.buffer}); log('BIOS Neo Geo enregistré ('+f.name+', '+((u8.length/1024)|0)+' Ko).','ok'); }catch(err){ showLog(); log('BIOS : '+(err&&(err.message||err)),'err'); } });\n"
             "    (async function init(){", "handlers bios")
 
-    # L) diagnostic : log détaillé RetroArch + capture console -> journal de la page
-    h = rep(h, "Object.assign({video_smooth:false},BINDS)",
-            "Object.assign({video_smooth:false,log_verbosity:true,frontend_log_level:0},BINDS)",
-            "log_verbosity", n=2)
+    # L) capture console (erreurs RetroArch/core) -> journal de la page (lisible sur iPhone)
     h = rep(h, "    window.addEventListener('error', function(e){ showLog(); log('Erreur : '+(e.message||e),'err'); });",
             "    (function(){ var _l=console.log.bind(console),_w=console.warn.bind(console),_e=console.error.bind(console);\n"
+            "      var RE=/error|fail|cannot|missing|required|not found|unsupported|exception|abort/i;\n"
             "      function s(a){ try{ return Array.prototype.map.call(a,function(x){return (x&&typeof x==='object')?JSON.stringify(x):String(x);}).join(' ').slice(0,300); }catch(e){ return ''; } }\n"
-            "      console.log=function(){ _l.apply(null,arguments); try{ log(s(arguments),'muted'); }catch(e){} };\n"
-            "      console.warn=function(){ _w.apply(null,arguments); try{ log('\\u26a0 '+s(arguments),'muted'); }catch(e){} };\n"
-            "      console.error=function(){ _e.apply(null,arguments); try{ showLog(); log('\\u2716 '+s(arguments),'err'); }catch(e){} }; })();\n"
+            "      function cap(pfx,a){ try{ var t=s(a); if(RE.test(t)){ log(pfx+t,'err'); showLog(); } }catch(e){} }\n"
+            "      console.log=function(){ _l.apply(null,arguments); cap('',arguments); };\n"
+            "      console.warn=function(){ _w.apply(null,arguments); cap('\\u26a0 ',arguments); };\n"
+            "      console.error=function(){ _e.apply(null,arguments); cap('\\u2716 ',arguments); }; })();\n"
             "    window.addEventListener('error', function(e){ showLog(); log('Erreur : '+(e.message||e),'err'); });",
             "capture console")
 
