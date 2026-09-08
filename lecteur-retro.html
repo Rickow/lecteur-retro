@@ -3594,7 +3594,6 @@ try {
         freshCanvas();
         var blobs=await coreBlobs(curCore), romBlob=new Blob([u8],{type:'application/octet-stream'});
         var _bios=CORES[curCore].neobios?await resolveNeoBios():null;
-        if(CORES[curCore].neobios) log(_bios?('\u2713 BIOS Neo Geo joint au jeu ('+((_bios.length/1024)|0)+' Ko)'):'\u2717 BIOS Neo Geo absent \u2014 charge un neogeo.zip','ok');
         log('Chargement '+name+' — '+CORES[curCore].label+'…');
         ng=await Nostalgist.launch({ element:canvas, core:(CORES[curCore].ngCore||curCore),
           resolveCoreJs:async function(){return blobs.js;}, resolveCoreWasm:async function(){return blobs.wasm;},

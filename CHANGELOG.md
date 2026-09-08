@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.1.3
+
+- Nettoyage : retrait du message de diagnostic « BIOS joint » au lancement.
+- Conservé : capture silencieuse des erreurs du core dans le journal (utile sur iPhone, sans devtools).
+
 ## v2.1.1
 
 Correctif Neo Geo (chargement).

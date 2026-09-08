@@ -91,8 +91,7 @@ def main():
     # câblage BIOS dans launchRom : résoudre + passer à Nostalgist
     h = rep(h, "        var blobs=await coreBlobs(curCore), romBlob=new Blob([u8],{type:'application/octet-stream'});",
             "        var blobs=await coreBlobs(curCore), romBlob=new Blob([u8],{type:'application/octet-stream'});\n"
-            "        var _bios=CORES[curCore].neobios?await resolveNeoBios():null;\n"
-            "        if(CORES[curCore].neobios) log(_bios?('\\u2713 BIOS Neo Geo joint au jeu ('+((_bios.length/1024)|0)+' Ko)'):'\\u2717 BIOS Neo Geo absent \\u2014 charge un neogeo.zip','ok');", "resolve bios launchRom")
+            "        var _bios=CORES[curCore].neobios?await resolveNeoBios():null;", "resolve bios launchRom")
 
     # D) façades boutons
     face_anchor = "var FACE_DUO='<div class=\"face duo\"><button class=\"b\" data-btn=\"b\">B</button><button class=\"a\" data-btn=\"a\">A</button></div>';"
