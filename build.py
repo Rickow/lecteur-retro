@@ -97,8 +97,19 @@ def main():
     face_anchor = "var FACE_DUO='<div class=\"face duo\"><button class=\"b\" data-btn=\"b\">B</button><button class=\"a\" data-btn=\"a\">A</button></div>';"
     face_add = face_anchor + "\n" \
       + "    var FACE_SEGA6='<div class=\"face six\"><button data-btn=\"l\">X</button><button data-btn=\"x\">Y</button><button data-btn=\"r\">Z</button><button data-btn=\"y\">A</button><button data-btn=\"b\">B</button><button data-btn=\"a\">C</button></div>';\n" \
-      + "    var FACE_FIGHT='<div class=\"face six\"><button data-btn=\"y\">LP</button><button data-btn=\"x\">MP</button><button data-btn=\"l\">HP</button><button data-btn=\"b\">LK</button><button data-btn=\"a\">MK</button><button data-btn=\"r\">HK</button></div>';"
+      + "    var FACE_FIGHT='<div class=\"face six\"><button data-btn=\"y\">LP</button><button data-btn=\"x\">MP</button><button data-btn=\"l\">HP</button><button data-btn=\"b\">LK</button><button data-btn=\"a\">MK</button><button data-btn=\"r\">HK</button></div>';\n" \
+      + "    var FACE_NEOGEO='<div class=\"face neo\"><button data-btn=\"y\">A</button><button data-btn=\"x\">B</button><button data-btn=\"l\">C</button><button data-btn=\"b\">D</button></div>';"
     h = rep(h, face_anchor, face_add, "constantes FACE")
+
+    # détection Neo Geo (lecture des noms de fichiers dans le .zip) -> façade 4 boutons
+    h = rep(h, "    function detect(name,u8){",
+            "    function zipNames(u8){ var names=[],n=u8.length; if(n<22) return names;"
+            " var end=Math.max(0,n-65557),i=n-22; for(;i>=end;i--){ if(u8[i]===0x50&&u8[i+1]===0x4b&&u8[i+2]===0x05&&u8[i+3]===0x06) break; } if(i<end) return names;"
+            " var p=(u8[i+16]|(u8[i+17]<<8)|(u8[i+18]<<16)|(u8[i+19]<<24))>>>0;"
+            " while(p+46<=n&&u8[p]===0x50&&u8[p+1]===0x4b&&u8[p+2]===0x01&&u8[p+3]===0x02){ var fnl=u8[p+28]|(u8[p+29]<<8),efl=u8[p+30]|(u8[p+31]<<8),cl=u8[p+32]|(u8[p+33]<<8),nm='';"
+            " for(var k=0;k<fnl;k++)nm+=String.fromCharCode(u8[p+46+k]); names.push(nm.toLowerCase()); p+=46+fnl+efl+cl; } return names; }\n"
+            "    function isNeoGeo(u8){ try{ return zipNames(u8).some(function(nm){return /\\.(s1|p1|c1|v1|m1)$/.test(nm);}); }catch(e){ return false; } }\n"
+            "    function detect(name,u8){", "helpers zip/neogeo")
 
     # E) map CORES
     old_cores = """    var CORES={
@@ -144,13 +155,23 @@ def main():
                "      return {core:'snes9x',ext:'sfc'}; }")
     h = rep(h, old_det, new_det, "detect magic-bytes")
 
-    # I) CSS façade 6 boutons
+    # I) CSS façades 6 boutons (CPS) + 4 boutons (Neo Geo)
     h = rep(h,
       "  #pad .face.duo button{width:var(--k);height:var(--k)} #pad .face.duo .a{margin-bottom:1.4rem}",
       "  #pad .face.duo button{width:var(--k);height:var(--k)} #pad .face.duo .a{margin-bottom:1.4rem}\n"
       "  #pad .face.six{display:grid;grid-template-columns:repeat(3,var(--k));grid-template-rows:repeat(2,var(--k));gap:3px}\n"
-      "  #pad .face.six button{border-radius:50%;font-size:.6rem;font-weight:700}",
-      "CSS face.six")
+      "  #pad .face.six button{border-radius:50%;font-size:.6rem;font-weight:700}\n"
+      "  #pad .face.neo{display:flex;gap:.4rem;align-items:center}\n"
+      "  #pad .face.neo button{width:var(--k);height:var(--k);border-radius:50%;font-size:.75rem;font-weight:700}",
+      "CSS faces")
+
+    # I2) buildPad accepte une façade ; launchRom choisit 4 boutons pour la Neo Geo
+    h = rep(h, "    function buildPad(core){\n      var C=CORES[core];",
+            "    function buildPad(core,face){\n      var C=CORES[core];", "buildPad signature")
+    h = rep(h, "        +C.face+'</div>'", "        +(face||C.face)+'</div>'", "buildPad face")
+    h = rep(h, "        tag.textContent=curName; buildPad(curCore);",
+            "        tag.textContent=curName; var _face=(curCore==='fbalpha2012'&&isNeoGeo(u8))?FACE_NEOGEO:CORES[curCore].face; buildPad(curCore,_face);",
+            "launchRom face")
 
     # J) BIOS Neo Geo : input + bouton d'accueil + handlers
     h = rep(h, '  <input type="file" id="file-sram"  accept=".srm,.sav,application/octet-stream">',

@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.1.4
+
+- **Neo Geo : façade 4 boutons (A/B/C/D)** au lieu de 6. Détection auto en lisant les noms
+  de fichiers dans le `.zip` (romsets Neo Geo = `*.p1/.s1/.c1/.m1`) ; les CPS gardent 6 boutons.
+
 ## v2.1.3
 
 - Nettoyage : retrait du message de diagnostic « BIOS joint » au lancement.
