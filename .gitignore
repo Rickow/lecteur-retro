@@ -1,0 +1,6 @@
+# cores téléchargés par build.py (regénérables, ~15 Mo)
+cores/
+
+# artefacts locaux
+*.tmp
+.DS_Store
